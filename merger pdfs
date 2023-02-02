@@ -1,0 +1,32 @@
+import os
+from PyPDF2 import PdfMerger
+import re
+
+def tryint(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+def alphanum_key(s):
+    """ Turn a string into a list of string and number chunks.
+        "z23a" -> ["z", 23, "a"]
+    """
+    return [ tryint(c) for c in re.split('([0-9]+)', s) ]
+
+pdfiles = []
+
+for filename in os.listdir('./'):
+    if filename.endswith('.pdf'):
+        if filename != 'merged.pdf':
+            pdfiles.append(filename)
+
+pdfiles.sort(key=alphanum_key)
+merger = PdfMerger()
+
+for filename in pdfiles:
+        print(filename)
+        merger.append(filename)
+
+merger.write("result.pdf")
+merger.close()
